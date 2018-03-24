@@ -1,9 +1,6 @@
 package com.theredpixelteam.redtea.predication;
 
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MultiPredicate<T, H> {
     public static <T, H> Builder<T, H> builder()
@@ -11,10 +8,13 @@ public class MultiPredicate<T, H> {
         return new Builder<>();
     }
 
-    MultiPredicate(Map<NamedPredicate<T, H>, Integer> shift, Map<H, Integer> handleMapped)
+    MultiPredicate(Map<NamedPredicate<T, H>, Integer> shift,
+                   Map<H, Integer> handleMapped,
+                   List<NamedPredicate<T, H>> shiftToPredicate)
     {
         this.shift = Collections.unmodifiableMap(shift);
         this.handleMappedShift = Collections.unmodifiableMap(handleMapped);
+        this.shiftToPredicate = Collections.unmodifiableList(shiftToPredicate);
     }
 
     public Current test(T t)
@@ -28,9 +28,24 @@ public class MultiPredicate<T, H> {
         return new Current(result);
     }
 
-    private Map<NamedPredicate<T, H>, Integer> shift;
+    public Current test(T t, H... handles)
+    {
+        BitSet result = new BitSet();
 
-    private Map<H, Integer> handleMappedShift;
+        Integer shift;
+        for(H handle : handles)
+            if((shift = handleMappedShift.get(handle)) != null)
+                if(shiftToPredicate.get(shift).test(t))
+                    result.set(shift);
+
+        return new Current(result);
+    }
+
+    private final List<NamedPredicate<T, H>> shiftToPredicate;
+
+    private final Map<NamedPredicate<T, H>, Integer> shift;
+
+    private final Map<H, Integer> handleMappedShift;
 
     public static class Builder<T, H>
     {
@@ -44,16 +59,19 @@ public class MultiPredicate<T, H> {
 
             shift.put(predicate, i);
             handleMappedShift.put(predicate.getHandle(), i);
+            shiftToPredicate.add(predicate);
 
             return this;
         }
 
         public MultiPredicate<T, H> build()
         {
-            return new MultiPredicate<>(shift, handleMappedShift);
+            return new MultiPredicate<>(shift, handleMappedShift, shiftToPredicate);
         }
 
         int index;
+
+        private final List<NamedPredicate<T, H>> shiftToPredicate = new ArrayList<>();
 
         private final Map<NamedPredicate<T, H>, Integer> shift = new HashMap<>();
 
