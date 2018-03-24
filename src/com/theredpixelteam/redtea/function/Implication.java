@@ -1,6 +1,11 @@
 package com.theredpixelteam.redtea.function;
 
 public final class Implication<T> {
+    public static Implication<Void> fake()
+    {
+        return of(false);
+    }
+
     public static Implication<Void> of()
     {
         return of(true);
@@ -21,6 +26,36 @@ public final class Implication<T> {
             throws X1, X2
     {
         return new Implication<>(predicate.test(supplier.get()));
+    }
+
+    public static <T> Implication<T> fake(T implicated)
+    {
+        return of(implicated, false);
+    }
+
+    public static <T> Implication<T> of(T implicated)
+    {
+        return of(implicated, true);
+    }
+
+    public static <T> Implication<T> of(T implicated, boolean flag)
+    {
+        return new Implication<>(implicated, flag);
+    }
+
+    public static <T, V, X extends Throwable> Implication<T> of(T implicated,
+                                                                V t,
+                                                                PredicateWithException<V, X> predicate) throws X
+    {
+        return new Implication<>(implicated, predicate.test(t));
+    }
+
+    public static <T, V, X1 extends Throwable, X2 extends Throwable> Implication<T> of(T implicated,
+                                                                                       SupplierWithException<V, X1> supplier,
+                                                                                       PredicateWithException<V, X2> predicate)
+            throws X1, X2
+    {
+        return new Implication<>(implicated, predicate.test(supplier.get()));
     }
 
     Implication(boolean expressOrNot)

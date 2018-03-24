@@ -1,6 +1,7 @@
 package com.theredpixelteam.redtea.predication;
 
 import com.theredpixelteam.redtea.function.ConsumerWithException;
+import com.theredpixelteam.redtea.function.Implication;
 import com.theredpixelteam.redtea.function.ProcedureWithException;
 
 public class MultiCondition<T, H> {
@@ -39,18 +40,69 @@ public class MultiCondition<T, H> {
             this.current = current;
         }
 
-        public <X extends Throwable> CurrentCondition<H> completelyIf()
+        @SafeVarargs
+        public final Implication<CurrentCondition<H>> completelyIf(H... handles)
         {
-            return this;
+            return Implication.of(this, flag = current.completelyIf(handles));
         }
 
-        public <X extends Throwable> void orElse(ConsumerWithException<MultiPredicate<?, H>.Current, X> consumer) throws X
+        @SafeVarargs
+        public final Implication<CurrentCondition<H>> partlyIf(H... handles)
+        {
+            return Implication.of(this, flag = current.partlyIf(handles));
+        }
+
+        @SafeVarargs
+        public final Implication<CurrentCondition<H>> completelyOnlyIf(H... handles)
+        {
+            return Implication.of(this, flag = current.completelyOnlyIf(handles));
+        }
+
+        @SafeVarargs
+        public final Implication<CurrentCondition<H>> partlyOnlyIf(H... handles)
+        {
+            return Implication.of(this, flag = current.partlyOnlyIf(handles));
+        }
+
+        @SafeVarargs
+        public final Implication<CurrentCondition<H>> elseCompletelyIf(H... handles)
+        {
+            if(flag)
+                return Implication.fake(this);
+            return Implication.of(this, flag = current.completelyIf(handles));
+        }
+
+        @SafeVarargs
+        public final Implication<CurrentCondition<H>> elsePartlyIf(H... handles)
+        {
+            if(flag)
+                return Implication.fake(this);
+            return Implication.of(this, flag = current.partlyIf(handles));
+        }
+
+        @SafeVarargs
+        public final Implication<CurrentCondition<H>> elseCompletelyOnlyIf(H... handles)
+        {
+            if(flag)
+                return Implication.fake(this);
+            return Implication.of(this, flag = current.completelyOnlyIf(handles));
+        }
+
+        @SafeVarargs
+        public final Implication<CurrentCondition<H>> elsePartlyOnlyIf(H... handles)
+        {
+            if(flag)
+                return Implication.fake(this);
+            return Implication.of(this, flag = current.partlyOnlyIf(handles));
+        }
+
+        public final <X extends Throwable> void orElse(ConsumerWithException<MultiPredicate<?, H>.Current, X> consumer) throws X
         {
             if(!flag)
                 consumer.accept(current);
         }
 
-        public <X extends Throwable> void orElse(ProcedureWithException<X> procedure) throws X
+        public final <X extends Throwable> void orElse(ProcedureWithException<X> procedure) throws X
         {
             if(!flag)
                 procedure.run();
