@@ -20,13 +20,13 @@ public class MultiCondition<T, H> {
         return predicate;
     }
 
-    public final CurrentCondition apply(T t)
+    public final CurrentCondition<H> apply(T t)
     {
         return new CurrentCondition<>(predicate.test(t));
     }
 
     @SafeVarargs
-    public final CurrentCondition apply(T t, H... handles)
+    public final CurrentCondition<H> apply(T t, H... handles)
     {
         return new CurrentCondition<>(predicate.test(t, handles));
     }
@@ -106,6 +106,11 @@ public class MultiCondition<T, H> {
         {
             if(!flag)
                 procedure.run();
+        }
+
+        public final Implication<CurrentCondition<H>> orElse()
+        {
+            return Implication.of(this, !flag);
         }
 
         public MultiPredicate<?, H>.Current getCurrent()
