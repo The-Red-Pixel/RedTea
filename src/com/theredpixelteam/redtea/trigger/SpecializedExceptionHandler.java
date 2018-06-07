@@ -3,8 +3,8 @@
  *
  * This file is part of RedTea, licensed under the MIT License (MIT).
  *
- * Copyright (C) The Red Pixel <theredpixelteam.com>
- * Copyright (C) KuCrO3 Studio <kucro3.org>
+ * Copyright (C) 2018 The Red Pixel <theredpixelteam.com>
+ * Copyright (C) 2018 KuCrO3 Studio <kucro3.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
