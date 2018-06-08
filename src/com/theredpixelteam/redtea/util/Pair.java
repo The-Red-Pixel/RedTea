@@ -64,6 +64,11 @@ public class Pair<T, E> {
         return this.second;
     }
 
+    public Pair<T, E> copy()
+    {
+        return new Pair<>(first, second);
+    }
+
     @Override
     public boolean equals(Object object)
     {

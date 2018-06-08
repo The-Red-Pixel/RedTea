@@ -46,6 +46,23 @@ public class VaguePair<T, E> extends Pair<T, E> {
         apply(options);
     }
 
+    VaguePair(Pair<T, E> pair, int options)
+    {
+        this(options);
+        this.referenced = pair;
+    }
+
+    public static <T, E> Pair<T, E> apply(Pair<T, E> pair, int options)
+    {
+        return new VaguePair<>(pair, options);
+    }
+
+    public static <T, E> void applyAll(Pair<T, E> pairs[], int options)
+    {
+        for(int i = 0; i < pairs.length; i++)
+            pairs[i] = apply(pairs[i], options);
+    }
+
     private void init()
     {
         MANIPULATORS[0].accept(this);
@@ -60,10 +77,60 @@ public class VaguePair<T, E> extends Pair<T, E> {
                 MANIPULATORS[i].accept(this);
     }
 
+    @Override
+    public T first()
+    {
+        return referenced == null ? super.first() : referenced.first();
+    }
+
+    @Override
+    public E second()
+    {
+        return referenced == null ? super.second() : referenced.second();
+    }
+
+    @Override
+    public T first(T first)
+    {
+        return referenced == null ? super.first(first) : referenced.first(first);
+    }
+
+    @Override
+    public E second(E second)
+    {
+        return referenced == null ? super.second(second) : referenced.second(second);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return hash.applyAsInt(this);
+    }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        return object instanceof Pair<?, ?> && comparator.test(this, (Pair<?, ?>) object);
+    }
+
+    @Override
+    public String toString()
+    {
+        return toString.apply(this);
+    }
+
+    @Override
+    public Pair<T, E> copy()
+    {
+        return referenced == null ? super.copy() : new Pair<>(referenced.first(), referenced.second());
+    }
+
     private String _toString()
     {
         return super.toString();
     }
+
+    Pair<T, E> referenced;
 
     BiPredicate<VaguePair<?, ?>, Pair<?, ?>> comparator;
 
