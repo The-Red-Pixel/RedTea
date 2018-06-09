@@ -54,6 +54,11 @@ public class Pair<T, E> {
         return old;
     }
 
+    public static <T, E> Pair<T, E> of(T first, E second)
+    {
+        return new Pair<>(first, second);
+    }
+
     public T first()
     {
         return this.first;
