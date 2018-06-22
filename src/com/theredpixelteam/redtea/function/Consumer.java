@@ -29,4 +29,8 @@ package com.theredpixelteam.redtea.function;
 
 @FunctionalInterface
 public interface Consumer<T> extends ConsumerWithException<T, RuntimeException> {
+    default java.util.function.Consumer<T> plain()
+    {
+        return this::accept;
+    }
 }

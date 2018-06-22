@@ -52,7 +52,7 @@ public class VaguePair<T, E> extends Pair<T, E> {
         this.referenced = pair;
     }
 
-    public static <T, E> Pair<T, E> apply(Pair<T, E> pair, int options)
+    public static <T, E> VaguePair<T, E> apply(Pair<T, E> pair, int options)
     {
         return new VaguePair<>(pair, options);
     }
@@ -61,6 +61,17 @@ public class VaguePair<T, E> extends Pair<T, E> {
     {
         for(int i = 0; i < pairs.length; i++)
             pairs[i] = apply(pairs[i], options);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T, E> VaguePair<T, E>[] applyNCopy(Pair<T, E> pairs[], int options)
+    {
+        VaguePair<T, E>[] array = new VaguePair[pairs.length];
+
+        for(int i = 0; i < pairs.length; i++)
+            array[i] = apply(pairs[i].copy(), options);
+
+        return array;
     }
 
     private void init()
