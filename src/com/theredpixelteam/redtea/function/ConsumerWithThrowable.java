@@ -1,5 +1,5 @@
 /*
- * PredicateWithException.java
+ * ConsumerWithException.java
  *
  * This file is part of RedTea, licensed under the MIT License (MIT).
  *
@@ -30,28 +30,12 @@ package com.theredpixelteam.redtea.function;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface PredicateWithException<T, X extends Throwable> {
-    boolean test(T t) throws X;
+public interface ConsumerWithThrowable<T, X extends Throwable> {
+    void accept(T t) throws X;
 
-    default PredicateWithException<T, X> and(PredicateWithException<T, X> other)
+    default ConsumerWithThrowable<T, X> andThen(ConsumerWithThrowable<T, X> after)
     {
-        Objects.requireNonNull(other, "other");
-        return (T t) -> test(t) && other.test(t);
-    }
-
-    default PredicateWithException<T, X> negate()
-    {
-        return (T t) -> !test(t);
-    }
-
-    default PredicateWithException<T, X> or(PredicateWithException<T, X> other)
-    {
-        Objects.requireNonNull(other, "other");
-        return (T t) -> test(t) || other.test(t);
-    }
-
-    static <T, X extends Throwable> PredicateWithException<T, X> isEqual(Object targetRef)
-    {
-        return targetRef == null ? Objects::isNull : targetRef::equals;
+        Objects.requireNonNull(after, "after");
+        return (T t) -> { accept(t); after.accept(t); };
     }
 }

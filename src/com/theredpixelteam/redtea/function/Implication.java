@@ -43,13 +43,13 @@ public final class Implication<T> {
         return new Implication<>(flag);
     }
 
-    public static <T, X extends Throwable> Implication<Void> of(T t, PredicateWithException<T, X> predicate) throws X
+    public static <T, X extends Throwable> Implication<Void> of(T t, PredicateWithThrowable<T, X> predicate) throws X
     {
         return new Implication<>(predicate.test(t));
     }
 
-    public static <T, X1 extends Throwable, X2 extends Throwable> Implication<Void> of(SupplierWithException<T, X1> supplier,
-                                                                                 PredicateWithException<T, X2> predicate)
+    public static <T, X1 extends Throwable, X2 extends Throwable> Implication<Void> of(SupplierWithThrowable<T, X1> supplier,
+                                                                                 PredicateWithThrowable<T, X2> predicate)
             throws X1, X2
     {
         return new Implication<>(predicate.test(supplier.get()));
@@ -72,14 +72,14 @@ public final class Implication<T> {
 
     public static <T, V, X extends Throwable> Implication<T> of(T implicated,
                                                                 V t,
-                                                                PredicateWithException<V, X> predicate) throws X
+                                                                PredicateWithThrowable<V, X> predicate) throws X
     {
         return new Implication<>(implicated, predicate.test(t));
     }
 
     public static <T, V, X1 extends Throwable, X2 extends Throwable> Implication<T> of(T implicated,
-                                                                                       SupplierWithException<V, X1> supplier,
-                                                                                       PredicateWithException<V, X2> predicate)
+                                                                                       SupplierWithThrowable<V, X1> supplier,
+                                                                                       PredicateWithThrowable<V, X2> predicate)
             throws X1, X2
     {
         return new Implication<>(implicated, predicate.test(supplier.get()));
@@ -103,7 +103,7 @@ public final class Implication<T> {
         return implicated;
     }
 
-    public <X extends Throwable, X1 extends Throwable> T throwException(SupplierWithException<X, X1> exceptionSupplier)
+    public <X extends Throwable, X1 extends Throwable> T throwException(SupplierWithThrowable<X, X1> exceptionSupplier)
             throws X, X1
     {
         if(expressOrNot)
@@ -111,7 +111,7 @@ public final class Implication<T> {
         return implicated;
     }
 
-    public <X extends Throwable> T perform(ProcedureWithException<X> procedure)
+    public <X extends Throwable> T perform(ProcedureWithThrowable<X> procedure)
             throws X
     {
         if(expressOrNot)
@@ -119,7 +119,7 @@ public final class Implication<T> {
         return implicated;
     }
 
-    public <V, X extends Throwable> T perform(V value, ConsumerWithException<V, X> consumer)
+    public <V, X extends Throwable> T perform(V value, ConsumerWithThrowable<V, X> consumer)
             throws X
     {
         if(expressOrNot)
@@ -127,8 +127,8 @@ public final class Implication<T> {
         return implicated;
     }
 
-    public <V, X1 extends Throwable, X2 extends Throwable> T perform(SupplierWithException<V, X1> supplier,
-                                                                     ConsumerWithException<V, X2> consumer)
+    public <V, X1 extends Throwable, X2 extends Throwable> T perform(SupplierWithThrowable<V, X1> supplier,
+                                                                     ConsumerWithThrowable<V, X2> consumer)
             throws X1, X2
     {
         if(expressOrNot)
@@ -138,7 +138,7 @@ public final class Implication<T> {
 
     public <V1, V2, X extends Throwable> T perform(V1 value1,
                                                    V2 value2,
-                                                   BiConsumerWithException<V1, V2, X> consumer)
+                                                   BiConsumerWithThrowable<V1, V2, X> consumer)
             throws X
     {
         if(expressOrNot)
@@ -146,9 +146,9 @@ public final class Implication<T> {
         return implicated;
     }
 
-    public <V1, V2, X1 extends Throwable, X extends Throwable> T perform(SupplierWithException<V1, X1> value1Supplier,
+    public <V1, V2, X1 extends Throwable, X extends Throwable> T perform(SupplierWithThrowable<V1, X1> value1Supplier,
                                                                          V2 value2,
-                                                                         BiConsumerWithException<V1, V2, X> consumer)
+                                                                         BiConsumerWithThrowable<V1, V2, X> consumer)
             throws X1, X
     {
         if(expressOrNot)
@@ -157,8 +157,8 @@ public final class Implication<T> {
     }
 
     public <V1, V2, X2 extends Throwable, X extends Throwable> T perform(V1 value1,
-                                                                         SupplierWithException<V2, X2> value2Supplier,
-                                                                         BiConsumerWithException<V1, V2, X> consumer)
+                                                                         SupplierWithThrowable<V2, X2> value2Supplier,
+                                                                         BiConsumerWithThrowable<V1, V2, X> consumer)
             throws X2, X
     {
         if(expressOrNot)
@@ -166,9 +166,9 @@ public final class Implication<T> {
         return implicated;
     }
 
-    public <V1, V2, X1 extends Throwable, X2 extends Throwable, X extends Throwable> T perform(SupplierWithException<V1, X1> value1Supplier,
-                                                                                               SupplierWithException<V2, X2> value2Supplier,
-                                                                                               BiConsumerWithException<V1, V2, X> consumer)
+    public <V1, V2, X1 extends Throwable, X2 extends Throwable, X extends Throwable> T perform(SupplierWithThrowable<V1, X1> value1Supplier,
+                                                                                               SupplierWithThrowable<V2, X2> value2Supplier,
+                                                                                               BiConsumerWithThrowable<V1, V2, X> consumer)
             throws X1, X2, X
     {
         if(expressOrNot)

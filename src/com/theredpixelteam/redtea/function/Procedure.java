@@ -28,5 +28,5 @@
 package com.theredpixelteam.redtea.function;
 
 @FunctionalInterface
-public interface Procedure extends ProcedureWithException<RuntimeException> {
+public interface Procedure extends ProcedureWithThrowable<RuntimeException> {
 }

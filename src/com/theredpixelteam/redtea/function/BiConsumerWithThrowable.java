@@ -1,5 +1,5 @@
 /*
- * ConsumerWithException.java
+ * BiConsumerWithException.java
  *
  * This file is part of RedTea, licensed under the MIT License (MIT).
  *
@@ -30,12 +30,12 @@ package com.theredpixelteam.redtea.function;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface ConsumerWithException<T, X extends Throwable> {
-    void accept(T t) throws X;
+public interface BiConsumerWithThrowable<T, U, X extends Throwable> {
+    void accept(T t, U u) throws X;
 
-    default ConsumerWithException<T, X> andThen(ConsumerWithException<T, X> after)
+    default BiConsumerWithThrowable<T, U, X> andThen(BiConsumerWithThrowable<T, U, X> after) throws X
     {
         Objects.requireNonNull(after, "after");
-        return (T t) -> { accept(t); after.accept(t); };
+        return (T t, U u) -> { accept(t, u); after.accept(t, u); };
     }
 }

@@ -27,9 +27,9 @@
 
 package com.theredpixelteam.redtea.predication;
 
-import com.theredpixelteam.redtea.function.ConsumerWithException;
+import com.theredpixelteam.redtea.function.ConsumerWithThrowable;
 import com.theredpixelteam.redtea.function.Implication;
-import com.theredpixelteam.redtea.function.ProcedureWithException;
+import com.theredpixelteam.redtea.function.ProcedureWithThrowable;
 
 public class MultiCondition<T, H> {
     public static <T, H> MultiCondition<T, H> of(MultiPredicate<T, H> predicate)
@@ -123,13 +123,13 @@ public class MultiCondition<T, H> {
             return Implication.of(this, flag = current.partlyOnlyIf(handles));
         }
 
-        public final <X extends Throwable> void orElse(ConsumerWithException<MultiPredicate<?, H>.Current, X> consumer) throws X
+        public final <X extends Throwable> void orElse(ConsumerWithThrowable<MultiPredicate<?, H>.Current, X> consumer) throws X
         {
             if(!flag)
                 consumer.accept(current);
         }
 
-        public final <X extends Throwable> void orElse(ProcedureWithException<X> procedure) throws X
+        public final <X extends Throwable> void orElse(ProcedureWithThrowable<X> procedure) throws X
         {
             if(!flag)
                 procedure.run();

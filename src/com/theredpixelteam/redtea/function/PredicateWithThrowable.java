@@ -1,5 +1,5 @@
 /*
- * ProcedureWithException.java
+ * PredicateWithException.java
  *
  * This file is part of RedTea, licensed under the MIT License (MIT).
  *
@@ -30,12 +30,28 @@ package com.theredpixelteam.redtea.function;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface ProcedureWithException<X extends Throwable> {
-    void run() throws X;
+public interface PredicateWithThrowable<T, X extends Throwable> {
+    boolean test(T t) throws X;
 
-    default ProcedureWithException<X> andThen(ProcedureWithException<X> after)
+    default PredicateWithThrowable<T, X> and(PredicateWithThrowable<T, X> other)
     {
-        Objects.requireNonNull(after, "after");
-        return () -> { run(); after.run(); };
+        Objects.requireNonNull(other, "other");
+        return (T t) -> test(t) && other.test(t);
+    }
+
+    default PredicateWithThrowable<T, X> negate()
+    {
+        return (T t) -> !test(t);
+    }
+
+    default PredicateWithThrowable<T, X> or(PredicateWithThrowable<T, X> other)
+    {
+        Objects.requireNonNull(other, "other");
+        return (T t) -> test(t) || other.test(t);
+    }
+
+    static <T, X extends Throwable> PredicateWithThrowable<T, X> isEqual(Object targetRef)
+    {
+        return targetRef == null ? Objects::isNull : targetRef::equals;
     }
 }

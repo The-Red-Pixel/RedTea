@@ -28,7 +28,7 @@
 package com.theredpixelteam.redtea.function;
 
 @FunctionalInterface
-public interface Supplier<T> extends SupplierWithException<T, RuntimeException> {
+public interface Supplier<T> extends SupplierWithThrowable<T, RuntimeException> {
     default java.util.function.Supplier<T> plain()
     {
         return this::get;
