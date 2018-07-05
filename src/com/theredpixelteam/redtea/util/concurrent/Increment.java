@@ -23,5 +23,10 @@ public class Increment {
         return value.incrementAndGet();
     }
 
+    public void clear()
+    {
+        value.set(0);
+    }
+
     private final AtomicInteger value = new AtomicInteger();
 }
