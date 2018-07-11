@@ -94,9 +94,9 @@ public final class OperationResult<T> {
         this.mismatches = mismatches;
     }
 
-    public Optional<T> getReturn()
+    public java.util.Optional<T> getReturn()
     {
-        return Optional.ofNullable(result);
+        return java.util.Optional.ofNullable(result);
     }
 
     final boolean state(ResultType resultType)
@@ -134,14 +134,14 @@ public final class OperationResult<T> {
         return state(ResultType.NO_SUCH_OBJECT);
     }
 
-    public Optional<Object> getFailure()
+    public java.util.Optional<Object> getFailure()
     {
-        return Optional.ofNullable(failure);
+        return java.util.Optional.ofNullable(failure);
     }
 
-    public Optional<Exception> getException()
+    public java.util.Optional<Exception> getException()
     {
-        return Optional.ofNullable(exception);
+        return java.util.Optional.ofNullable(exception);
     }
 
     public Collection<Mismatch> getMismatches()
