@@ -61,6 +61,11 @@ public final class ThreeStateOptional<T> {
         return value;
     }
 
+    public T getSilently()
+    {
+        return value;
+    }
+
     public T nullableGet()
     {
         if(isEmpty())

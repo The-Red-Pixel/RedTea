@@ -34,6 +34,11 @@ public final class Optional<T> {
         return value;
     }
 
+    public T getSilently()
+    {
+        return value;
+    }
+
     public boolean isPresent()
     {
         return value != null;
