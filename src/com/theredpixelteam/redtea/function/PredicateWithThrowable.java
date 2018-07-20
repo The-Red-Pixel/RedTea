@@ -1,5 +1,5 @@
 /*
- * PredicateWithException.java
+ * PredicateWithThrowable.java
  *
  * This file is part of RedTea, licensed under the MIT License (MIT).
  *

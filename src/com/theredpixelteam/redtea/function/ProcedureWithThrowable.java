@@ -1,5 +1,5 @@
 /*
- * ProcedureWithException.java
+ * ProcedureWithThrowable.java
  *
  * This file is part of RedTea, licensed under the MIT License (MIT).
  *
