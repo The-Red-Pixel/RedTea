@@ -88,6 +88,22 @@ public final class Optional<T> {
         throw exceptionSupplier.get();
     }
 
+    public <X extends Throwable> Optional<T> whenPresent(ConsumerWithThrowable<? super T, ? extends X> consumer) throws X
+    {
+        if(isPresent())
+            consumer.accept(value);
+
+        return this;
+    }
+
+    public <X extends Throwable> Optional<T> whenNotPresent(ProcedureWithThrowable<? extends X> procedure) throws X
+    {
+        if(!isPresent())
+            procedure.run();
+
+        return this;
+    }
+
     public <X extends Throwable> IfNotPresent ifPresent(ConsumerWithThrowable<? super T, ? extends X> consumer) throws X
     {
         boolean b;

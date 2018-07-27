@@ -32,6 +32,8 @@ import com.theredpixelteam.redtea.function.*;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+import static javafx.scene.input.KeyCode.X;
+
 @SuppressWarnings("unchecked")
 public final class ThreeStateOptional<T> {
     private ThreeStateOptional()
@@ -100,6 +102,38 @@ public final class ThreeStateOptional<T> {
         return value;
     }
 
+    public <X extends Throwable> ThreeStateOptional<T> whenNull(ProcedureWithThrowable<? extends X> procedure) throws X
+    {
+        if(isNull())
+            procedure.run();
+
+        return this;
+    }
+
+    public <X extends Throwable> ThreeStateOptional<T> whenEmpty(ProcedureWithThrowable<? extends X> procedure) throws X
+    {
+        if(isEmpty())
+            procedure.run();
+
+        return this;
+    }
+
+    public <X extends Throwable> ThreeStateOptional<T> whenNotPresent(ProcedureWithThrowable<? extends X> procedure) throws X
+    {
+        if(!isPresent())
+            procedure.run();
+
+        return this;
+    }
+
+    public <X extends Throwable> ThreeStateOptional<T> whenPresent(ConsumerWithThrowable<? super T, ? extends X> consumer) throws X
+    {
+        if(isPresent())
+            consumer.accept(value);
+
+        return this;
+    }
+
     public T whenNull(T value)
     {
         T t = nullableGet();
@@ -111,12 +145,17 @@ public final class ThreeStateOptional<T> {
         return isEmpty() ? value : nullableGet();
     }
 
+    public T whenNotPresent(T value)
+    {
+        return isPresent() ? this.value : value;
+    }
+
     public T when(T valueOnNull, T valueOnEmpty)
     {
         return isEmpty() ? valueOnEmpty : whenNull(valueOnNull);
     }
 
-    public <X extends Throwable> T getWhenNull(SupplierWithThrowable<? extends T, X> supplier) throws X
+    public <X extends Throwable> T whenNull(SupplierWithThrowable<? extends T, X> supplier) throws X
     {
         Objects.requireNonNull(supplier);
 
@@ -124,11 +163,18 @@ public final class ThreeStateOptional<T> {
         return t == null ? supplier.get() : t;
     }
 
-    public <X extends Throwable> T getWhenEmpty(SupplierWithThrowable<? extends T, X> supplier) throws X
+    public <X extends Throwable> T whenEmpty(SupplierWithThrowable<? extends T, X> supplier) throws X
     {
         Objects.requireNonNull(supplier);
 
         return isEmpty() ? supplier.get() : nullableGet();
+    }
+
+    public <X extends Throwable> T whenNotPresent(SupplierWithThrowable<? extends T, X> supplier) throws X
+    {
+        Objects.requireNonNull(supplier);
+
+        return isPresent() ? this.value : supplier.get();
     }
 
     public <X1 extends Throwable, X2 extends Throwable> T getWhen(SupplierWithThrowable<? extends T, X1> supplierOnNull,
@@ -138,7 +184,7 @@ public final class ThreeStateOptional<T> {
         Objects.requireNonNull(supplierOnNull);
         Objects.requireNonNull(supplierOnEmpty);
 
-        return isEmpty() ? supplierOnEmpty.get() : getWhenNull(supplierOnNull);
+        return isEmpty() ? supplierOnEmpty.get() : whenNull(supplierOnNull);
     }
 
     public <X extends Throwable> ThreeStateOptional<T> throwIfPresent(Supplier<? extends X> exceptionSupplier) throws X
@@ -166,6 +212,16 @@ public final class ThreeStateOptional<T> {
         Objects.requireNonNull(exceptionSupplier);
 
         if(isEmpty())
+            throw exceptionSupplier.get();
+
+        return this;
+    }
+
+    public <X extends Throwable> ThreeStateOptional<T> throwIfNotPresent(Supplier<? extends X> exceptionSupplier) throws X
+    {
+        Objects.requireNonNull(exceptionSupplier);
+
+        if(!isPresent())
             throw exceptionSupplier.get();
 
         return this;
@@ -267,7 +323,32 @@ public final class ThreeStateOptional<T> {
 
     private static final ThreeStateOptional<?> EMPTY = new ThreeStateOptional<>();
 
-    public static final class IfNotPresent<T> extends Optional.Implicated
+    public static class Implicated
+    {
+        Implicated(boolean flag)
+        {
+            this.flag = flag;
+        }
+
+        static Implicated of(boolean b)
+        {
+            return b ? TRUE : FALSE;
+        }
+
+        public <X extends Throwable> void orElse(ProcedureWithThrowable<? extends X> procedure) throws X
+        {
+            if(flag)
+                procedure.run();
+        }
+
+        final boolean flag;
+
+        static final Implicated TRUE = new Implicated(true);
+
+        static final Implicated FALSE = new Implicated(false);
+    }
+
+    public static final class IfNotPresent<T> extends Implicated
     {
         private IfNotPresent(boolean flag, ThreeStateOptional<T> self)
         {
@@ -280,24 +361,24 @@ public final class ThreeStateOptional<T> {
             return flag ? new IfNotPresent<>(true, self) : (IfNotPresent<T>) FALSE;
         }
 
-        public <X extends Throwable> Optional.Implicated orElseIfNull(ProcedureWithThrowable<? extends X> procedure) throws X
+        public <X extends Throwable> Implicated orElseIfNull(ProcedureWithThrowable<? extends X> procedure) throws X
         {
             if(flag && self.isNull())
                 procedure.run();
             else
-                return Optional.Implicated.of(flag);
+                return Implicated.of(flag);
 
-            return Optional.Implicated.FALSE;
+            return Implicated.FALSE;
         }
 
-        public <X extends Throwable> Optional.Implicated ofElseIfEmpty(ProcedureWithThrowable<? extends X> procedure) throws X
+        public <X extends Throwable> Implicated ofElseIfEmpty(ProcedureWithThrowable<? extends X> procedure) throws X
         {
             if(flag && self.isEmpty())
                 procedure.run();
             else
-                return Optional.Implicated.of(flag);
+                return Implicated.of(flag);
 
-            return Optional.Implicated.FALSE;
+            return Implicated.FALSE;
         }
 
         private static final IfNotPresent<?> FALSE = new IfNotPresent<>(false, null);
@@ -305,7 +386,7 @@ public final class ThreeStateOptional<T> {
         private final ThreeStateOptional<T> self;
     }
 
-    public static final class IfNotNull<T> extends Optional.Implicated
+    public static final class IfNotNull<T> extends Implicated
     {
         private IfNotNull(boolean flag, ThreeStateOptional<T> self)
         {
@@ -318,24 +399,24 @@ public final class ThreeStateOptional<T> {
             return flag ? new IfNotNull<>(true, self) : (IfNotNull<T>) FALSE;
         }
 
-        public <X extends Throwable> Optional.Implicated orElseIfPresent(ConsumerWithThrowable<? super T, ? extends X> consumer) throws X
+        public <X extends Throwable> Implicated orElseIfPresent(ConsumerWithThrowable<? super T, ? extends X> consumer) throws X
         {
             if(flag && self.isPresent())
                 consumer.accept(self.value);
             else
-                return Optional.Implicated.of(flag);
+                return Implicated.of(flag);
 
-            return Optional.Implicated.FALSE;
+            return Implicated.FALSE;
         }
 
-        public <X extends Throwable> Optional.Implicated ofElseIfEmpty(ProcedureWithThrowable<? extends X> procedure) throws X
+        public <X extends Throwable> Implicated ofElseIfEmpty(ProcedureWithThrowable<? extends X> procedure) throws X
         {
             if(flag && self.isEmpty())
                 procedure.run();
             else
-                return Optional.Implicated.of(flag);
+                return Implicated.of(flag);
 
-            return Optional.Implicated.FALSE;
+            return Implicated.FALSE;
         }
 
         private static final IfNotNull<?> FALSE = new IfNotNull<>(false, null);
@@ -343,7 +424,7 @@ public final class ThreeStateOptional<T> {
         private final ThreeStateOptional<T> self;
     }
 
-    public static final class IfNotEmpty<T> extends Optional.Implicated
+    public static final class IfNotEmpty<T> extends Implicated
     {
         private IfNotEmpty(boolean flag, ThreeStateOptional<T> self)
         {
@@ -356,24 +437,24 @@ public final class ThreeStateOptional<T> {
             return flag ? new IfNotEmpty<>(true, self) : (IfNotEmpty<T>) FALSE;
         }
 
-        public <X extends Throwable> Optional.Implicated orElseIfPresent(ConsumerWithThrowable<? super T, ? extends X> consumer) throws X
+        public <X extends Throwable> Implicated orElseIfPresent(ConsumerWithThrowable<? super T, ? extends X> consumer) throws X
         {
             if(flag && self.isPresent())
                 consumer.accept(self.value);
             else
-                return Optional.Implicated.of(flag);
+                return Implicated.of(flag);
 
-            return Optional.Implicated.FALSE;
+            return Implicated.FALSE;
         }
 
-        public <X extends Throwable> Optional.Implicated orElseIfNull(ProcedureWithThrowable<? extends X> procedure) throws X
+        public <X extends Throwable> Implicated orElseIfNull(ProcedureWithThrowable<? extends X> procedure) throws X
         {
             if(flag && self.isNull())
                 procedure.run();
             else
-                return Optional.Implicated.of(flag);
+                return Implicated.of(flag);
 
-            return Optional.Implicated.FALSE;
+            return Implicated.FALSE;
         }
 
         private static final IfNotEmpty<?> FALSE = new IfNotEmpty<>(false, null);
