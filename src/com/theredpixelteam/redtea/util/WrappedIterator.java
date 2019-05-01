@@ -1,5 +1,5 @@
 /*
- * IOUtils.java
+ * WrappedIterator.java
  *
  * This file is part of RedTea, licensed under the MIT License (MIT).
  *
@@ -25,29 +25,43 @@
  * THE SOFTWARE.
  */
 
-package com.theredpixelteam.redtea.util.io;
+package com.theredpixelteam.redtea.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Objects;
+import com.theredpixelteam.redtea.function.Function;
 
-public class IOUtils {
-    private IOUtils()
+import java.util.Iterator;
+
+public class WrappedIterator<E, T> implements Iterator<T> {
+    public static <E, T> WrappedIterator<E, T> of(Iterator<E> iterator, Function<E, T> wrapper)
     {
+        return new WrappedIterator<>(iterator, wrapper);
     }
 
-    public static byte[] readFully(InputStream inputStream) throws IOException
+    WrappedIterator(Iterator<E> iterator, Function<E, T> wrapper)
     {
-        Objects.requireNonNull(inputStream);
-
-        byte[] byts = new byte[1024];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        int len;
-        while ((len = inputStream.read(byts)) > 0)
-            baos.write(byts, 0, len);
-
-        return baos.toByteArray();
+        this.iterator = iterator;
+        this.wrapper = wrapper;
     }
+
+    @Override
+    public boolean hasNext()
+    {
+        return iterator.hasNext();
+    }
+
+    @Override
+    public T next()
+    {
+        return wrapper.apply(iterator.next());
+    }
+
+    @Override
+    public void remove()
+    {
+        iterator.remove();
+    }
+
+    private final Iterator<E> iterator;
+
+    private final Function<E, T> wrapper;
 }

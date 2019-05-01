@@ -1,5 +1,5 @@
 /*
- * IOUtils.java
+ * WrappedEnumeration.java
  *
  * This file is part of RedTea, licensed under the MIT License (MIT).
  *
@@ -25,29 +25,38 @@
  * THE SOFTWARE.
  */
 
-package com.theredpixelteam.redtea.util.io;
+package com.theredpixelteam.redtea.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Objects;
+import com.theredpixelteam.redtea.function.Function;
 
-public class IOUtils {
-    private IOUtils()
+import java.util.Enumeration;
+
+public class WrappedEnumeration<E, T> implements Enumeration<T> {
+    public static <E, T, X extends Throwable> WrappedEnumeration<E, T>
+    of(Enumeration<E> enumeration, Function<E, T> wrapper)
     {
+        return new WrappedEnumeration<>(enumeration, wrapper);
     }
 
-    public static byte[] readFully(InputStream inputStream) throws IOException
+    WrappedEnumeration(Enumeration<E> enumeration, Function<E, T> wrapper)
     {
-        Objects.requireNonNull(inputStream);
-
-        byte[] byts = new byte[1024];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        int len;
-        while ((len = inputStream.read(byts)) > 0)
-            baos.write(byts, 0, len);
-
-        return baos.toByteArray();
+        this.enumeration = enumeration;
+        this.wrapper = wrapper;
     }
+
+    @Override
+    public boolean hasMoreElements()
+    {
+        return enumeration.hasMoreElements();
+    }
+
+    @Override
+    public T nextElement()
+    {
+        return wrapper.apply(enumeration.nextElement());
+    }
+
+    private final Enumeration<E> enumeration;
+
+    private final Function<E, T> wrapper;
 }

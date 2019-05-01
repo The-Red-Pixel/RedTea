@@ -1,5 +1,5 @@
 /*
- * IOUtils.java
+ * Iterators.java
  *
  * This file is part of RedTea, licensed under the MIT License (MIT).
  *
@@ -25,29 +25,34 @@
  * THE SOFTWARE.
  */
 
-package com.theredpixelteam.redtea.util.io;
+package com.theredpixelteam.redtea.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Objects;
 
-public class IOUtils {
-    private IOUtils()
+public class Iterators {
+    private Iterators()
     {
     }
 
-    public static byte[] readFully(InputStream inputStream) throws IOException
+    public static <E> Iterator<E> fromEnumeration(final Enumeration<E> enumeration)
     {
-        Objects.requireNonNull(inputStream);
+        Objects.requireNonNull(enumeration);
 
-        byte[] byts = new byte[1024];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        return new Iterator<E>()
+        {
+            @Override
+            public boolean hasNext()
+            {
+                return enumeration.hasMoreElements();
+            }
 
-        int len;
-        while ((len = inputStream.read(byts)) > 0)
-            baos.write(byts, 0, len);
-
-        return baos.toByteArray();
+            @Override
+            public E next()
+            {
+                return enumeration.nextElement();
+            }
+        };
     }
 }
