@@ -108,6 +108,30 @@ public final class Predication {
         throw new IllegalArgumentException(messageSupplier.get());
     }
 
+    public static int requireNonNegative(int value)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException();
+
+        return value;
+    }
+
+    public static int requireNonNegative(int value, String message)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException(message);
+
+        return value;
+    }
+
+    public static int requireNonNegative(int value, Supplier<String> messageSupplier)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException(messageSupplier.get());
+
+        return value;
+    }
+
     public static int requirePositive(int value)
     {
         if (value > 0)
@@ -130,5 +154,29 @@ public final class Predication {
             return value;
 
         throw new IllegalArgumentException(messageSupplier.get());
+    }
+
+    public static int requireNonPositive(int value)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException();
+
+        return value;
+    }
+
+    public static int requireNonPositive(int value, String message)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException(message);
+
+        return value;
+    }
+
+    public static int requireNonPositive(int value, Supplier<String> messageSupplier)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException(messageSupplier.get());
+
+        return value;
     }
 }
