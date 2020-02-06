@@ -74,7 +74,37 @@ public final class Predication {
         return value < 0;
     }
 
+    public static boolean isNegative(float value)
+    {
+        return value < 0;
+    }
+
+    public static boolean isNegative(long value)
+    {
+        return value < 0;
+    }
+
+    public static boolean isNegative(double value)
+    {
+        return value < 0;
+    }
+
     public static boolean isPositive(int value)
+    {
+        return value > 0;
+    }
+
+    public static boolean isPositive(float value)
+    {
+        return value > 0;
+    }
+
+    public static boolean isPositive(long value)
+    {
+        return value > 0;
+    }
+
+    public static boolean isPositive(double value)
     {
         return value > 0;
     }
@@ -84,7 +114,46 @@ public final class Predication {
         return value == 0;
     }
 
+    public static boolean isZero(float value)
+    {
+        return value == 0;
+    }
+
+    public static boolean isZero(long value)
+    {
+        return value == 0;
+    }
+
+    public static boolean isZero(double value)
+    {
+        return value == 0;
+    }
+
     public static int requireNegative(int value)
+    {
+        if (value < 0)
+            return value;
+
+        throw new IllegalArgumentException();
+    }
+
+    public static float requireNegative(float value)
+    {
+        if (value < 0)
+            return value;
+
+        throw new IllegalArgumentException();
+    }
+
+    public static long requireNegative(long value)
+    {
+        if (value < 0)
+            return value;
+
+        throw new IllegalArgumentException();
+    }
+
+    public static double requireNegative(double value)
     {
         if (value < 0)
             return value;
@@ -100,7 +169,55 @@ public final class Predication {
         throw new IllegalArgumentException(message);
     }
 
+    public static float requireNegative(float value, String message)
+    {
+        if (value < 0)
+            return value;
+
+        throw new IllegalArgumentException(message);
+    }
+
+    public static long requireNegative(long value, String message)
+    {
+        if (value < 0)
+            return value;
+
+        throw new IllegalArgumentException(message);
+    }
+
+    public static double requireNegative(double value, String message)
+    {
+        if (value < 0)
+            return value;
+
+        throw new IllegalArgumentException(message);
+    }
+
     public static int requireNegative(int value, Supplier<String> messageSupplier)
+    {
+        if (value < 0)
+            return value;
+
+        throw new IllegalArgumentException(messageSupplier.get());
+    }
+
+    public static float requireNegative(float value, Supplier<String> messageSupplier)
+    {
+        if (value < 0)
+            return value;
+
+        throw new IllegalArgumentException(messageSupplier.get());
+    }
+
+    public static long requireNegative(long value, Supplier<String> messageSupplier)
+    {
+        if (value < 0)
+            return value;
+
+        throw new IllegalArgumentException(messageSupplier.get());
+    }
+
+    public static double requireNegative(double value, Supplier<String> messageSupplier)
     {
         if (value < 0)
             return value;
@@ -116,7 +233,55 @@ public final class Predication {
         return value;
     }
 
+    public static float requireNonNegative(float value)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException();
+
+        return value;
+    }
+
+    public static long requireNonNegative(long value)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException();
+
+        return value;
+    }
+
+    public static double requireNonNegative(double value)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException();
+
+        return value;
+    }
+
     public static int requireNonNegative(int value, String message)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException(message);
+
+        return value;
+    }
+
+    public static float requireNonNegative(float value, String message)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException(message);
+
+        return value;
+    }
+
+    public static long requireNonNegative(long value, String message)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException(message);
+
+        return value;
+    }
+
+    public static double requireNonNegative(double value, String message)
     {
         if (value < 0)
             throw new IllegalArgumentException(message);
@@ -132,7 +297,55 @@ public final class Predication {
         return value;
     }
 
+    public static float requireNonNegative(float value, Supplier<String> messageSupplier)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException(messageSupplier.get());
+
+        return value;
+    }
+
+    public static long requireNonNegative(long value, Supplier<String> messageSupplier)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException(messageSupplier.get());
+
+        return value;
+    }
+
+    public static double requireNonNegative(double value, Supplier<String> messageSupplier)
+    {
+        if (value < 0)
+            throw new IllegalArgumentException(messageSupplier.get());
+
+        return value;
+    }
+
     public static int requirePositive(int value)
+    {
+        if (value > 0)
+            return value;
+
+        throw new IllegalArgumentException();
+    }
+
+    public static float requirePositive(float value)
+    {
+        if (value > 0)
+            return value;
+
+        throw new IllegalArgumentException();
+    }
+
+    public static long requirePositive(long value)
+    {
+        if (value > 0)
+            return value;
+
+        throw new IllegalArgumentException();
+    }
+
+    public static double requirePositive(double value)
     {
         if (value > 0)
             return value;
@@ -148,7 +361,55 @@ public final class Predication {
         throw new IllegalArgumentException(message);
     }
 
+    public static float requirePositive(float value, String message)
+    {
+        if (value > 0)
+            return value;
+
+        throw new IllegalArgumentException(message);
+    }
+
+    public static long requirePositive(long value, String message)
+    {
+        if (value > 0)
+            return value;
+
+        throw new IllegalArgumentException(message);
+    }
+
+    public static double requirePositive(double value, String message)
+    {
+        if (value > 0)
+            return value;
+
+        throw new IllegalArgumentException(message);
+    }
+
     public static int requirePositive(int value, Supplier<String> messageSupplier)
+    {
+        if (value > 0)
+            return value;
+
+        throw new IllegalArgumentException(messageSupplier.get());
+    }
+
+    public static float requirePositive(float value, Supplier<String> messageSupplier)
+    {
+        if (value > 0)
+            return value;
+
+        throw new IllegalArgumentException(messageSupplier.get());
+    }
+
+    public static long requirePositive(long value, Supplier<String> messageSupplier)
+    {
+        if (value > 0)
+            return value;
+
+        throw new IllegalArgumentException(messageSupplier.get());
+    }
+
+    public static double requirePositive(double value, Supplier<String> messageSupplier)
     {
         if (value > 0)
             return value;
@@ -164,6 +425,30 @@ public final class Predication {
         return value;
     }
 
+    public static float requireNonPositive(float value)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException();
+
+        return value;
+    }
+
+    public static long requireNonPositive(long value)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException();
+
+        return value;
+    }
+
+    public static double requireNonPositive(double value)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException();
+
+        return value;
+    }
+
     public static int requireNonPositive(int value, String message)
     {
         if (value > 0)
@@ -172,7 +457,55 @@ public final class Predication {
         return value;
     }
 
+    public static float requireNonPositive(float value, String message)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException(message);
+
+        return value;
+    }
+
+    public static long requireNonPositive(long value, String message)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException(message);
+
+        return value;
+    }
+
+    public static double requireNonPositive(double value, String message)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException(message);
+
+        return value;
+    }
+
     public static int requireNonPositive(int value, Supplier<String> messageSupplier)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException(messageSupplier.get());
+
+        return value;
+    }
+
+    public static float requireNonPositive(float value, Supplier<String> messageSupplier)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException(messageSupplier.get());
+
+        return value;
+    }
+
+    public static long requireNonPositive(long value, Supplier<String> messageSupplier)
+    {
+        if (value > 0)
+            throw new IllegalArgumentException(messageSupplier.get());
+
+        return value;
+    }
+
+    public static double requireNonPositive(double value, Supplier<String> messageSupplier)
     {
         if (value > 0)
             throw new IllegalArgumentException(messageSupplier.get());
